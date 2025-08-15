@@ -1,0 +1,88 @@
+{% load static %}
+      <!-- ========== Left Sidebar Start ========== -->
+      
+      <div class="vertical-menu">
+
+        {% comment %} <!-- LOGO -->
+        <div class="navbar-brand-box">
+            <a href="index.html" class="logo logo-dark">
+                <span class="logo-sm">
+                    <img src="{% static 'img/blucog1.png' %}" alt="" height="40">
+                </span>
+                <span class="logo-lg">
+                    <img src="{% static 'img/bluecognition_logo.png' %}" alt="" height="30">
+                </span>
+            </a>
+
+            <a href="index.html" class="logo logo-light">
+                <span class="logo-lg">
+                    <img src="{% static 'img/blucog1.png' %}" alt="" height="40">
+                </span>
+                <span class="logo-sm">
+                    <img src="{% static 'img/bluecognition_logo.png' %}" alt="" height="33">
+                </span>
+            </a>
+        </div> {% endcomment %}
+
+        <button type="button" class="btn btn-sm px-3 font-size-16 header-item vertical-menu-btn">
+            <i class="fa fa-fw fa-bars"></i>
+        </button>
+
+        <div data-simplebar class="sidebar-menu-scroll">
+
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu list-unstyled" id="side-menu">
+                   
+
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="icon nav-icon" data-feather="monitor"></i>
+                            <span class="menu-item" data-key="t-sales">Dashboards</span>
+                            
+                        </a>
+                    </li>
+
+                   
+                    <li class="menu-title" data-key="t-applications"></li>
+                   
+
+                   
+                    <li>
+                        <a href="{% url 'manual_entry' %}">
+                            <i class="icon nav-icon" data-feather="check-square"></i>
+                            <span class="menu-item" data-key="t-analytics">Manual Entry</span>
+                           
+                        </a>
+                    </li>
+                    <li class="menu-title" data-key="t-applications"></li>
+                    {% if request.user.is_manager == 1 %}
+                    <li>
+                        <a href="{% url 'reports' %}">
+                            <i class="icon nav-icon" data-feather="activity"></i>
+                            <span class="menu-item" data-key="t-analytics">Reports</span>
+                           
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_superuser %}
+                    <li class="menu-title" data-key="t-applications"></li>
+                    <li>
+                        <a href="{% url 'register' %}">
+                            <i class="icon nav-icon" data-feather="user-plus"></i>
+                            <span class="menu-item" data-key="t-analytics">Access Management</span>
+                           
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+
+
+            </div>
+            <!-- Sidebar -->
+        </div>
+    </div>
+    <!-- Left Sidebar End -->
+

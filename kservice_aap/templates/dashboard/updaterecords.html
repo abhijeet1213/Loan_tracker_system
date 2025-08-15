@@ -1,0 +1,656 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} KServices CMS {% endblock %} 
+{% block stylesheets %}
+
+<style>
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Firefox */
+  input[type=number] {
+    
+    -moz-appearance: textfield;
+  }
+  button {
+        background-color: #2b65c1;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 17px;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        cursor: pointer
+    }
+
+    button:hover {
+        opacity: 0.8
+    }
+</style>
+
+<style media="screen">
+  .loading {
+      position: fixed;
+      z-index: 99;
+      top: 0;
+      left: 0;
+      
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #222;
+      text-align: center;
+      width: 100%;
+      height:100%;
+      opacity: .5;
+  }
+      /* border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 110px;
+      height: 110px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      /* animation: spin 2s linear infinite; *
+      
+     
+    }
+
+
+/*
+ * Loading Dots
+ * Can we use pseudo elements here instead :after?
+ */
+.loading span {
+  display: inline-block;
+  vertical-align: middle;
+  width: 3em;
+  height: 3em;
+  margin: .19em;
+  background: #007DB6;
+  border-radius: 1em;
+  animation: loading 1s infinite alternate;
+}
+
+/*
+ * Dots Colors
+ * Smarter targeting vs nth-of-type?
+ */
+.loading span:nth-of-type(2) {
+  background: #2f6ae9;
+  animation-delay: 0.2s;
+}
+.loading span:nth-of-type(3) {
+  background: #034bbf;
+  animation-delay: 0.4s;
+}
+.loading span:nth-of-type(4) {
+  background: #385ec9;
+  animation-delay: 0.6s;
+}
+.loading span:nth-of-type(5) {
+  background: #008bb2;
+  animation-delay: 0.8s;
+}
+.loading span:nth-of-type(6) {
+  background: #0b68a6;
+  animation-delay: 1.0s;
+}
+.loading span:nth-of-type(7) {
+  background: #1e6db6;
+  animation-delay: 1.2s;
+}
+
+/*
+ * Animation keyframes
+ * Use transition opacity instead of keyframes?
+ */
+@keyframes loading {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+</style>
+
+{% endblock stylesheets %}
+{% block content %}
+<div class="loading" style="display:none" id="loading" >
+        
+        
+        
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+
+</div>
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="card">
+              <div class="card-header text-white" style="background-color: #006FCF;">
+                  <h5 class="card-title">New Record</h5>
+
+                </div>
+                <div class="card-body">
+                  {% csrf_token %}
+                  <form  action="#"  method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                      <input type="text" value="{{data.id}}" id="case_id" name ="case_id" hidden disabled>
+                      <div class="mb-3 col-md-2">
+                        <label for="inputdate">Date</label>
+               
+                        <input type="date" class="form-control" id="tdate"disabled   value="{{data.t_date |date:'Y-m-d'}}" readonly >
+                      </div>
+                      <div class="mb-3 col-md-3">
+                        <label for="inputdeal">SBA Loan Number</label>
+                        <input type="text" class="form-control" id="sbalnumber" disabled placeholder="SBA Loan Number" value="{{data.application_loan_number | default:''}}" readonly required>
+                      </div>
+
+                      <div class="mb-3 col-md-2">
+                        <label for="inputdba">Kuser ID</label>
+                        <input type="number" pattern="[0-9]*" disabled title="Only numbers are allowed." class="form-control" id="akuser_id"  name="akuser_id" value="{{data.akuser_id | default:''}}" >
+                      </div>
+
+                      <div class="mb-3 col-md-5">
+                        <label for="inputdba">Portfolio Lender</label>
+                        <input type="text" class="form-control" disabled id="portfolio_lender" name="portfolio_lender" value="{{data.portfolio_lender | default:''}}" >
+                      </div>
+
+                    </div>
+                    
+                    <div class="row">
+                      <div class="mb-3 col-md-3">
+                        <label for="inputindustrytpe">Borrower Name
+
+                        </label>
+                        <input type="text" class="form-control" disabled id="borrower_name"  name="borrower_name"  required value="{{data.borrower_name | default:''}}" >
+                      </div>
+
+                     
+                                    
+                        <div class="mb-3 col-md-2">
+                          <label for="inputindustrytpe">Origination Date
+                        </label>
+
+                          <input type="date" class="form-control" disabled id="origination_date"  name="origination_date"  required value="{{org_date | date:'Y-m-d'}}" >
+                        </div>
+                        
+                        <div class="mb-3 col-md-2">
+                            <label for="inputindustrytpe">Maturity Date</label>
+                            <input type="date" class="form-control" disabled id="maturity_date"  name="maturity_date"  required value="{{maturity_date | date:'Y-m-d'}}" >
+                        </div>
+
+                        <div class="mb-3 col-md-2">
+                            <label for="inputindustrytpe">Origination Amount
+    
+                            </label>
+                            <input type="number" class="form-control" disabled id="origination_amount"  name="origination_amount"  required value="{{data.origination_amount | default:''}}" >
+                          </div>
+                          <div class="mb-3 col-md-3">
+                            <label for="inputindustrytpe">Salesforce Ticket Number
+
+    
+                            </label>
+                            <input type="number" class="form-control"  disabled id="salesforce_ticket_number"  name="salesforce_ticket_number"  required value="{{data.salesforce_ticket_number | default:''}}" >
+                          </div>
+                       
+                      </div>
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="addcomments" class="form-label">SF Comment
+                            </label>
+                            <textarea class="form-control" id="comment" disabled rows="3" name="comment">{{data.comment | default:''}}</textarea>
+                          </div>
+                    </div>
+
+                   
+                    <div class="row">
+                        <div class="mb-3 col-md-3">
+                          <label for="inputbetype">Business Structure
+                        </label>
+                          <select disabled id="business_structure" name="business_structure" class="form-select"  required>
+                            <option value="">Select</option>
+
+                            {% if data.business_structure == "Corporation" %}
+                            <option selected >Corporation</option>
+                            {% else %}
+                            <option >Corporation</option>
+                            {% endif %}
+
+                            {% if data.business_structure == "GeneralPartnership" %}
+                            <option selected >GeneralPartnership</option>
+                            {% else %}
+                            <option >GeneralPartnership</option>
+                            {% endif %}
+
+                            {% if data.business_structure == "LLC" %}
+                            <option selected >LLC</option>
+                            {% else %}
+                            <option >LLC</option>
+                            {% endif %}
+
+                            {% if data.business_structure == "Professional Corporation" %}
+                            <option selected >Professional Corporation</option>
+                            {% else %}
+                            <option >Professional Corporation</option>
+                            {% endif %}
+
+                            {% if data.business_structure == "Single LLC and Sole Proprietorship" %}
+                            <option selected >Single LLC and Sole Proprietorship</option>
+                            {% else %}
+                            <option >Single LLC and Sole Proprietorship</option>
+                            {% endif %}
+
+
+                           
+                 
+                        
+                          
+                            
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-3">
+                            <label for="inputindustrytpe">KORE
+    
+                            </label>
+                            <textarea class="form-control" id="kore" rows="3" name="kore"  disabled >{{data.kore | default:''}}</textarea>
+                            
+                          </div>
+                     
+                          <div class="mb-3 col-md-3">
+                            <label for="inputindustrytpe">Inscribe
+    
+                            </label>
+                            <textarea class="form-control" id="inscribe" rows="3" name="inscribe" disabled >{{data.inscribe | default:''}}</textarea>
+                          
+                          </div>
+                        <!-- </div>  -->
+                        <!-- <div class="row"> -->
+                          <div class="mb-3 col-md-3">
+                            <label for="inputindustrytpe">Google Search
+
+    
+                            </label>
+                            <textarea class="form-control" id="google_search" rows="3" name="google_search" disabled >{{data.google_search | default:''}}</textarea>
+                           
+                          </div>
+                          <div class="mb-3 col-md-3">
+                            <label for="inputindustrytpe">TLO
+
+    
+                            </label>
+                            <textarea class="form-control" id="tlo" rows="3"  name="tlo" disabled >{{data.tlo | default:''}}</textarea>
+                           
+                          </div>
+                    </div>
+                    <div class="row">
+                      <div class="mb-3 col-md-3">
+                          <!-- <label for="inputindustrytpe"><i class="fa fa-plus" aria-hidden="true"></i> Add KORE Comment -->
+                            <button type="button" class="btn btn-outline-primary" onclick="open_model('KORE')" align="right" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+                              <i class="fa fa-plus" aria-hidden="true"></i> Add KORE Comment
+                            </button>
+                          <!-- </label>
+                          <textarea class="form-control" id="kore" rows="3" name="kore">{{data.kore | default:''}}</textarea>
+                           -->
+                        </div>
+                   
+                        <div class="mb-3 col-md-3">
+                          <!-- <label for="inputindustrytpe"><i class="fa fa-plus" aria-hidden="true"></i> Add Inscribe Comment -->
+                            <button type="button" class="btn btn-outline-primary" onclick="open_model('Inscribe')" align="right" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+                              <i class="fa fa-plus" aria-hidden="true"></i> Add Inscribe Comment
+                            </button>
+                          <!-- </label>
+                          <textarea class="form-control" id="inscribe" rows="3" name="inscribe">{{data.inscribe | default:''}}</textarea>
+                         -->
+                        </div>
+                      <!-- </div>  -->
+                      <!-- <div class="row"> -->
+                        <div class="mb-3 col-md-3">
+                          <!-- <label for="inputindustrytpe"><i class="fa fa-plus" aria-hidden="true"></i> Add Google Search Comment -->
+                            <button type="button" class="btn btn-outline-primary" onclick="open_model('Google Search')" align="right" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+                              <i class="fa fa-plus" aria-hidden="true"></i> Add Google Search Comment
+                            </button>
+  
+                          <!-- </label>
+                          <textarea class="form-control" id="google_search" rows="3" name="google_search">{{data.google_search | default:''}}</textarea>
+                          -->
+                        </div>
+                        <div class="mb-3 col-md-3">
+                          <!-- <label for="inputindustrytpe"><i class="fa fa-plus" aria-hidden="true"></i> Add TLO Comment -->
+                            <button type="button" class="btn btn-outline-primary" onclick="open_model('TLO')" align="right" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+                              <i class="fa fa-plus" aria-hidden="true" ></i> Add TLO Comment
+                            </button>
+  
+                          <!-- </label>
+                          <textarea class="form-control" id="tlo" rows="3" name="tlo">{{data.tlo | default:''}}</textarea>
+                          -->
+                        </div>
+                  </div>
+  
+                    <!-- <div class="mb-3" align="right">
+                      <button style="float: right;" type="button" id="submitbtn" onclick="submit_new_record();">Submit</button> -->
+                  </form>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-dialog-centered" style=" margin:0 auto;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+     
+      <div class="modal-body">
+                  {% csrf_token %}
+         
+          
+          {% csrf_token %}
+          <div class="row">
+              <div class="mb-3">
+                  <label class="form-label">Comment</label>
+                  <textarea rows="5" type="text" class="form-control" id="comment"  name="comment" required></textarea>
+                 </div>
+                 <div class="mb-3" hidden>
+                  <label class="form-label">Comment for</label>
+                  <input type="text" class="form-control"  id="commment"  name="commment" required>
+                 </div>
+              
+          </div>
+        
+
+      <!-- Ends here -->
+      </div>
+      <div class="modal-footer">
+       
+        <div class="mb-3" align="right">
+          <button class="btn btn-lg btn-primary btn-block" type="button" onclick="add_comment()">Submit</button>
+          </div>
+        </div>
+  
+</div>
+</div>
+</div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"> </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<script>
+  function open_model(model_name){
+    $('#exampleModalLabel').text(model_name +" Comment")
+    $('#commment').val(model_name)
+
+  }
+
+function add_comment(){
+  var id=$('#commment').val()
+  var comment=$('#comment').val()
+  var case_id=$('#case_id').val();
+
+  if(comment==""){
+    Swal.fire({
+                                        
+                                       
+                                        icon: 'warning',
+                                        title: 'Comment is Mandatory .. !! ',
+                                        showConfirmButton: false,
+
+                                    })
+  }
+  else{
+    $.ajax
+                    (
+                        {                       // initialize an AJAX request
+                            method: "POST",
+                            url: "/update_comment",
+                            contentType:"application/json",
+                            dataType:'text',
+                            data: JSON.stringify({
+                              'id':id,
+                              'comment':comment,
+                              'case_id':case_id
+                            }),
+
+                            success: function (response) {
+                               
+                                if (response) {
+                                   
+                                    Swal.fire({
+                                        
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Comment Updated Succesfully',
+                                        showConfirmButton: false,
+                                        timer: 700
+                                    }).then(function () {
+                                        location.reload();
+                                    });
+                                }
+                                else  {
+                                       
+                                    Swal.fire({
+                                        
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'Something Went Wrong ',
+                                        showConfirmButton: false,
+                                        
+                                    })
+                                }
+                            }
+
+
+                        }
+                    );
+
+  }
+
+}
+
+
+function submit_new_record() {
+  var case_id=$('#case_id').val();
+  var akuser_id=$('#akuser_id').val();
+  var portfolio_lender=$('#portfolio_lender').val();
+  var borrower_name=$('#borrower_name').val();
+  var origination_date=$('#origination_date').val();
+  var maturity_date=$('#maturity_date').val();
+  var origination_amount=$('#origination_amount').val();
+  var salesforce_ticket_number=$('#salesforce_ticket_number').val();
+  var business_structure=$("#business_structure option:selected").text();
+  var kore=$('#kore').val();
+  var inscribe=$('#inscribe').val();
+  var google_search=$('#google_search').val();
+  var tlo=$('#tlo').val();
+  var comment=$('#comment').val();
+  // if(!akuser_id)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Kuser ID!',
+  //       })
+  // else if(!portfolio_lender)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Portfolio Lender!',
+  //       })
+  // else if(!borrower_name)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Borrower Name!',
+  //       })
+  // else if(!origination_date)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Origination Date!',
+  //       })
+
+  // else if(!maturity_date)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Maturity Date!',
+  //       })
+
+  // else if(!origination_amount)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Origination Amount !',
+  //       })
+    
+  // else if (isNaN(origination_amount))
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Invalid value in Origination Amount!',
+  //       })
+
+  // else if(!salesforce_ticket_number)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please enter the Salesforce Ticket Number!',
+  //       })
+    
+  // else if (isNaN(salesforce_ticket_number))
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Invalid value in Salesforce Ticket Number!',
+  //       })
+  // else if(!comment)
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Invalid value in SF Comment!',
+  //       })
+  // else if((business_structure=="Select"))
+  //       Swal.fire({
+  //           icon: 'error',
+  //           title: 'Oops...',
+  //           text: 'Please select a Business Structure!',
+            
+  //           })
+  
+  // else
+  Swal.fire({
+            title: 'Do you want to Submit the form?',
+            icon: "warning",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: 'Yes',
+            denyButtonText: `No `,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                
+                // document.getElementById('submitbtn').setAttribute("disabled","disabled");
+                $('#loading').show();
+                $.ajax
+                    (
+                        {                       // initialize an AJAX request
+                            method: "POST",
+                            url: "/updaterecord",
+                            contentType:"application/json",
+                            dataType:'text',
+                            data: JSON.stringify({
+                              'akuser_id':akuser_id,
+                                'portfolio_lender': portfolio_lender,
+                                'borrower_name': borrower_name,
+                                'origination_date': origination_date,
+                                'maturity_date': maturity_date,
+                                'origination_amount':origination_amount,
+                                'salesforce_ticket_number':salesforce_ticket_number,
+                                'business_structure':business_structure,
+                                'kore':kore,
+                                'inscribe':inscribe,
+                                'tlo':tlo,
+                                'c_id':case_id,
+                                'google_search':google_search,
+                                'comment':comment,
+                               
+                               
+
+
+
+                            }),
+
+                            success: function (response) {
+                               
+                                if (response == "1") {
+                                    
+                                    Swal.fire('Saved!', '', 'success')    
+                                    Swal.fire({
+                                        
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Submitted Succesfully',
+                                        showConfirmButton: false,
+                                        timer: 700
+                                    }).then(function () {
+                                        location.href = "/manual_entry";
+                                    });
+                                }
+                            }
+
+
+                        }
+                    );
+
+            } else if (result.isDenied) {
+                $('#loading').hide();
+                // document.getElementById('submitbtn').removeAttribute("disabled");
+
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+
+
+}
+
+
+
+
+</script>
+<script>
+   
+  $('#datetimepicker-date').datetimepicker({
+      format: 'S'
+  });
+
+</script>
+
+{% endblock javascripts %}
+
+
+
+

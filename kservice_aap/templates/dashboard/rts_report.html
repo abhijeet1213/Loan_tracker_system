@@ -1,0 +1,140 @@
+<style>
+  
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #eaeff4;
+    }
+    table, th, td {
+border: 1px solid rgb(227, 232, 236);
+}
+</style>
+<div class="card">
+                
+    <div class="card-body">
+     
+
+        <div class="table-responsive" id="data_posted">
+            <table class="table table-however"  id="queue_data">
+              
+                   <thead>
+                    <tr class="item-row">
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(254, 250, 250); ">Application Loan Number</th>
+
+                        </th>
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(254, 250, 250); ">User ID
+                        </th>
+                        <th scope="col" style="background-color:   #006FCF; color:rgb(254, 250, 250); ">Portfolio Lender
+                        </th>
+                        <th scope="col" style="background-color:   #006FCF; color:rgb(254, 250, 250); ">Borrower Name
+                        </th>
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(254, 250, 250); ">Origination Date</th>
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Maturity Date</th>
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Origination Amount</th>
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Comment</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Reviewer</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Date</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Business Structure</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Kore</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Inscribe</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Google Search</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">TLO</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Case Start Time</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Case End Time</th> 
+                        <th scope="col" style="background-color:  #006FCF; color:rgb(255, 255, 255); ">Duration</th> 
+                      
+                        
+                    </tr>
+                </thead>
+                    {{if }}
+                    <tbody>
+                        {% for record_daetails in data %}
+                    <tr>
+                       
+                        <td scope="col">{{ record_daetails.application_loan_number}}</td>
+                        <td scope="col">{{ record_daetails.akuser_id }}</td>
+                        <td scope="col">{{ record_daetails.portfolio_lender }}</td>
+                        <td scope="col">{{ record_daetails.borrower_name }}</td>
+                        <td scope="col">{{ record_daetails.origination_date | date:'d/m/Y'  }}</td>
+                        <td scope="col">{{ record_daetails.maturity_date | date:'d/m/Y'  }}</td>
+                        <td scope="col">{{ record_daetails.origination_amount }}</td>
+                        <td scope="col">{{ record_daetails.comment }}</td>
+                        <td scope="col">{{ record_daetails.first_name }} {{ record_daetails.last_name }}</td>
+                        <td scope="col">{{ record_daetails.t_date | date:'d/m/Y'  }}</td>
+                        <td scope="col">{{ record_daetails.business_structure }}</td>
+                        <td scope="col">{{ record_daetails.kore }}</td>
+                        <td scope="col">{{ record_daetails.inscribe }}</td>
+                        <td scope="col">{{ record_daetails.google_search }}</td>
+                        <td scope="col">{{ record_daetails.tlo }}</td>
+                        <td scope="col">{{ record_daetails.start_time|date:'d/m/Y H:i:s' }}</td>
+                        <td scope="col">{{ record_daetails.end_time |date:'d/m/Y H:i:s'  }}</td>
+                        <td scope="col">{{ record_daetails.duration  }}</td>
+                       
+                        
+                        
+                      
+                     
+                        
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% block javascripts %}
+
+    <script>
+     
+        $(document).ready(function () {
+      $('#queue_data').DataTable({
+          responsive: true,
+          "lengthMenu": [[10, 25, 50, -1], [10, 25, 50,100,200, "All"]],     // page length options
+      
+        // "scrollY": 200,
+        "scrollX": true,   // enables horizontal scrolling
+          scrollX: true,
+         
+          "autoWidth": false,
+          dom: 'Bfrtip',
+          buttons: [
+            {
+                extend: 'excelHtml5',
+                title: 'Kservices Report' 
+            },
+            'pageLength'
+            
+        ]
+         
+      });
+      $(document).ready( function () {
+            $('#queue_data').DataTable();
+} );
+  });
+
+  function export_to_excel(){
+  console.log("export");
+  $("#queue_data").table2excel({
+  exclude: ".noExport",
+  filename: "Project Snapshot",
+});
+
+};
+
+</script>
+
+{% endblock javascripts %}

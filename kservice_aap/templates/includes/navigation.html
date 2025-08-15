@@ -1,0 +1,118 @@
+{% load static %}
+<header id="page-topbar">
+   
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                {% comment %} <a href="index.html" class="logo logo-dark"> {% endcomment %}
+                    <span class="logo-sm">
+                        {% comment %} <img src="img/blucog1.png" alt="" height="22"> {% endcomment %}
+                    </span>
+                    <span class="logo-lg">
+                        {% comment %} <img src="img/bluecognition_logo.png alt=" height="22"> {% endcomment %}
+                    </span>
+                </a>
+
+                {% comment %} <a href="index.html" class="logo logo-light"> {% endcomment %}
+                    <span class="logo-sm">
+                        {% comment %} <img src="img/blucog1.png" alt="" height="22"> {% endcomment %}
+                    </span>
+                    <span class="logo-lg">
+                        {% comment %} <img src="img/bluecognition_logo.png" alt="" height="22"> {% endcomment %}
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+
+
+
+        </div>
+
+        <div class="d-flex">
+          
+                
+            </div>
+
+
+
+
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item user text-start d-flex align-items-center"
+                    id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+
+                    <span class="ms-2 d-none d-sm-block user-item-desc">
+
+                     
+                        
+                        <span class="user-name">{{request.user.first_name}} {{request.user.last_name}}</span>
+                        
+                       
+                        <span class="user-sub-title">{{request.user.role_id}}</span>
+                        <div id = "clock" onload="currentTime()"></div>
+                    </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end pt-0">
+                    <div class="p-3 bg-primary border-bottom">
+                        <h6 class="mb-0 text-white">{{request.user.first_name}} {{request.user.last_name}}</h6>
+                        <p class="mb-0 font-size-11 text-white-50 fw-semibold">{{request.user.email}}
+                        
+                        </p>
+                        
+                     
+
+
+
+                    </div>
+                    <!-- <a class="dropdown-item" href="pages-profile.html"><i
+                            class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span
+                            class="align-middle">Profile</span></a> -->
+                    
+
+                            <a class="dropdown-item" href="{% url 'reset_pass' %}"><i
+                                class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span
+                                class="align-middle">Reset Password</span></a>
+                            
+                    <a class="dropdown-item" href="{% url 'logout' %}"><i
+                            class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i> <span
+                            class="align-middle">Logout</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</header>
+<script>
+    function currentTime() {
+  let date = new Date(); 
+  let hh = date.getHours();
+  let mm = date.getMinutes();
+  let ss = date.getSeconds();
+  let session = "AM";
+
+  if(hh == 0){
+      hh = 12;
+  }
+  if(hh > 12){
+      hh = hh - 12;
+      session = "PM";
+   }
+
+   hh = (hh < 10) ? "0" + hh : hh;
+   mm = (mm < 10) ? "0" + mm : mm;
+   ss = (ss < 10) ? "0" + ss : ss;
+    
+   let time = hh + ":" + mm + ":" + ss + " " + session;
+
+  document.getElementById("clock").innerText = time; 
+  let t = setTimeout(function(){ currentTime() }, 1000);
+}
+currentTime();
+</script>
+
